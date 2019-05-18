@@ -5,7 +5,7 @@ export BUCKET='s3://gadfull/mysql/backup-new'
 cd /var/www
 
 mysqldump_() {
- docker-compose exec -T docker-mysql mysqldump -ueva -p02hDPHr73TP66Nr1c eva 2>/dev/null | gzip
+ docker-compose exec -T docker-mysql mysqldump -ueva -p eva 2>/dev/null | gzip
 }
 
 d1=$(date +%s)
