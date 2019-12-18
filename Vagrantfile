@@ -7,7 +7,6 @@ $script = <<-SCRIPT
 
 #0
 apt-get update
-apt-get upgrade -y
 #1
 apt install -y docker.io socat jq mc
 #2
@@ -187,6 +186,7 @@ jpvc=/tmp/hostpath-provisioner/$(kubectl -n kube-system get pvc jenkins |grep -o
 mkdir -p ${jpvc}/{tools,.kube}
 cp -vf /usr/local/bin/{kubectl,helm} ${jpvc}/tools/
 cp -vf /usr/bin/docker ${jpvc}/tools/
+set +x
 [ -f  ${jpvc}/.kube/config  ] || \
     cat ~/.kube/config | while IFS=  read line; do 
      if ( echo "$line" | grep -q -E 'certificate-authority|client-certificate|client-key' ); then
