@@ -5,11 +5,11 @@ $script = <<-SCRIPT
 #!/bin/bash -xe
 
 #0
-apt update
-#sed -i -E 's/(#+|^)PermitRootLogin.+/PermitRootLogin true/g' /etc/ssh/sshd_config
-#systemctl restart ssh.service
+yum -y update
 #1
-apt install -y docker.io socat jq mc curl wget
+yum install -y epel-release socat jq mc curl wget yum-utils device-mapper-persistent-data lvm2
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum install -y docker
 systemctl enable docker
 systemctl start docker
 #2
@@ -52,10 +52,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "generic/ubuntu1804"
-  config.vm.provision "shell",
-    inline: "sed -i -E 's/(#+|^)PermitRootLogin.+/PermitRootLogin true/g' /etc/ssh/sshd_config;
-             systemctl restart ssh.service"    
+  config.vm.box = "centos/7"   
   config.ssh.username = 'root'   
   config.vm.hostname = "test"
   
