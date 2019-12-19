@@ -52,8 +52,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "centos/7"   
-  config.ssh.username = 'root'   
+  config.vm.box = "centos/7"    
   config.vm.hostname = "test"
   
   config.vm.box_check_update = false
