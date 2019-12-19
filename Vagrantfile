@@ -6,6 +6,8 @@ $script = <<-SCRIPT
 
 #0
 apt update
+sed -i -E 's/(#+|^)PermitRootLogin.+/PermitRootLogin true/g' /etc/ssh/sshd_config
+systemctl restart ssh.service
 #1
 apt install -y docker.io socat jq mc curl wget
 systemctl enable docker
@@ -52,6 +54,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "generic/ubuntu1804"
   config.ssh.username = 'root'
+  config.ssh.password = 'vagrant'
+  config.ssh.insert_key = 'true'    
   config.vm.hostname = "test"
   
   config.vm.box_check_update = false
