@@ -5,9 +5,9 @@ $script = <<-SCRIPT
 #!/bin/bash -xe
 
 #0
-apk update
+apt update
 #1
-apk add docker socat jq mc curl wget
+apt install -y docker.io socat jq mc curl wget
 systemctl enable docker
 systemctl start docker
 #2
@@ -50,8 +50,9 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "generic/alpine38"
-  #config.vm.hostname = "service01"
+  config.vm.box = "generic/ubuntu1804"
+  config.ssh.username = 'root'
+  config.vm.hostname = "test"
   
   config.vm.box_check_update = false
 
