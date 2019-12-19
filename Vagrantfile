@@ -5,13 +5,9 @@ $script = <<-SCRIPT
 #!/bin/bash -xe
 
 #0
-yum -y update
+apt-get update
 #1
-yum install -y epel-release socat jq mc curl wget yum-utils device-mapper-persistent-data lvm2
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-yum install -y docker
-systemctl enable docker
-systemctl start docker
+apt install -y docker.io socat jq mc
 #2
 which minikube || ( curl --silent -Lo minikube \
       https://github.com/kubernetes/minikube/releases/download/v1.5.2/minikube-linux-amd64 \
@@ -52,8 +48,8 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "centos/7"    
-  config.vm.hostname = "test"
+  config.vm.box = "generic/ubuntu1804"
+  #config.vm.hostname = "service01"
   
   config.vm.box_check_update = false
 
@@ -76,4 +72,3 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: $script
 
 end
-
