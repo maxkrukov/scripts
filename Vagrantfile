@@ -14,18 +14,19 @@ which minikube || ( curl --silent -Lo minikube \
        && chmod +x minikube \
         && mv minikube /usr/local/bin/ )
 #3
+mkdir -p /tmp/hostpath-provisioner /vagrant_data
+chmod  777 /tmp/hostpath-provisioner /vagrant_data
+cat /etc/fstab | grep -q '/tmp/hostpath-provisioner' || \
+       echo "/vagrant_data /tmp/hostpath-provisioner none defaults,bind 0 2" \
+        | tee -a /etc/fstab && mount -av     
+#4
 minikube update-context >/dev/null 2>&1 || true 
 minikube status >/dev/null 2>&1 || minikube start --vm-driver=none \
        --apiserver-ips $(ifconfig | grep 'inet ' | awk '{print$2}' | tr '\n' ',' | sed 's/,$//g') \
        --apiserver-name localhost
 which kubectl || ( minikube kubectl get po && \
        cp -vf /root/.minikube/cache/*/kubectl /usr/local/bin/ )
-#4
-mkdir -p /tmp/hostpath-provisioner /vagrant_data
-chmod  777 /tmp/hostpath-provisioner /vagrant_data
-cat /etc/fstab | grep -q '/tmp/hostpath-provisioner' || \
-       echo "/vagrant_data /tmp/hostpath-provisioner none defaults,bind 0 2" \
-        | tee -a /etc/fstab && mount -av     
+systemctl enable kubelet
 #5
 minikube addons enable ingress
 minikube addons enable dashboard
@@ -39,9 +40,7 @@ which helm || ( curl --silent -LO https://get.helm.sh/helm-v2.16.0-linux-amd64.t
          && sudo chmod +x /usr/local/bin/helm ) 
 helm ls || helm init || true
 while ( ! helm ls >/dev/null 2>&1 ); do sleep 10 && echo 'Waiting for tiller...';  done 
-#7
-systemctl enable kubelet
-
+#
 SCRIPT
 
 
