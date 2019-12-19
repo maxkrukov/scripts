@@ -5,9 +5,11 @@ $script = <<-SCRIPT
 #!/bin/bash -xe
 
 #0
-apt-get update
+apk update
 #1
-apt install -y docker.io socat jq mc
+apk add docker socat jq mc curl wget
+systemctl enable docker
+systemctl start docker
 #2
 which minikube || ( curl --silent -Lo minikube \
       https://github.com/kubernetes/minikube/releases/download/v1.5.2/minikube-linux-amd64 \
@@ -48,7 +50,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "generic/ubuntu1804"
+  config.vm.box = "generic/alpine38"
   #config.vm.hostname = "service01"
   
   config.vm.box_check_update = false
