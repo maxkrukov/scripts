@@ -52,7 +52,7 @@ Vagrant.configure("2") do |config|
   
   config.vm.box_check_update = false
 
-  config.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "enp5s0.5"
+  config.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "bond0"
 
   config.vm.synced_folder "./vagrant_data", "/vagrant_data"
   #config.vm.synced_folder "/etc/letsencrypt", "/etc/letsencrypt"
