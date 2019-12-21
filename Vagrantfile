@@ -10,7 +10,7 @@ apt-get update
 apt install -y docker.io socat jq mc
 #2
 which minikube || ( curl --silent -Lo minikube \
-      https://github.com/kubernetes/minikube/releases/download/v1.5.2/minikube-linux-amd64 \
+      https://github.com/kubernetes/minikube/releases/download/v1.6.2/minikube-linux-amd64 \
        && chmod +x minikube \
         && mv minikube /usr/local/bin/ )
 #3
@@ -33,13 +33,16 @@ minikube addons enable dashboard
 sleep 10
 kubectl -n kubernetes-dashboard patch svc kubernetes-dashboard -p '{"spec":{"type":"NodePort","ports": [{ "port": 80, "nodePort": 30000 }]}}'
 #6
-which helm || ( curl --silent -LO https://get.helm.sh/helm-v2.16.0-linux-amd64.tar.gz \
-      && tar -xf helm-v2.16.0-linux-amd64.tar.gz  \
+which helm || ( curl --silent -LO https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz \
+      && tar -xf helm-v2.16.1-linux-amd64.tar.gz  \
        && sudo mv -f linux-amd64/helm  /usr/local/bin/ \
-        && rm -r helm-v2.16.0-linux-amd64.tar.gz linux-amd64 \
+        && rm -r helm-v2.16.1-linux-amd64.tar.gz linux-amd64 \
          && sudo chmod +x /usr/local/bin/helm ) 
 helm ls || helm init || true
 while ( ! helm ls >/dev/null 2>&1 ); do sleep 10 && echo 'Waiting for tiller...';  done 
+#7
+helm repo update
+helm install stable/prometheus-operator --name prometheus-operator --namespace monitoring
 #
 SCRIPT
 
