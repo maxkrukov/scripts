@@ -42,7 +42,8 @@ helm ls || helm init || true
 while ( ! helm ls >/dev/null 2>&1 ); do sleep 10 && echo 'Waiting for tiller...';  done 
 #7
 helm repo update
-helm install stable/prometheus-operator --name prometheus-operator --namespace monitoring
+helm install stable/prometheus-operator --version=4.3.6 --name=monitoring \
+        --namespace=monitoring --values=minikube-prom-stack.yaml
 #
 SCRIPT
 
