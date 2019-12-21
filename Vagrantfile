@@ -45,7 +45,7 @@ which helm || ( curl --silent -LO https://get.helm.sh/helm-${helm_version}-linux
 helm ls || helm init || true
 while ( ! helm ls >/dev/null 2>&1 ); do sleep 10 && echo 'Waiting for tiller...';  done 
 #7
-apt install -y apache2 apache2-utils libcgi-fast-perl libapache2-mod-fcgid munin
+apt install -y apache2 apache2-utils libcgi-fast-perl libapache2-mod-fcgid munin > /dev/null
 echo 'Listen 8000' > /etc/apache2/ports.conf
 systemctl restart apache2
 a2enmod fcgid || true
