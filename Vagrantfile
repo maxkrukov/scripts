@@ -21,7 +21,7 @@ cat /etc/fstab | grep -q '/tmp/hostpath-provisioner' || \
         | tee -a /etc/fstab && mount -av     
 #4
 minikube update-context >/dev/null 2>&1 || true 
-minikube status >/dev/null 2>&1 || minikube start --vm-driver=none \
+minikube status >/dev/null 2>&1 || minikube start --vm-driver=none --kubernetes-version=v1.15.2 \
        --apiserver-ips $(ifconfig | grep 'inet ' | awk '{print$2}' | tr '\n' ',' | sed 's/,$//g') \
        --apiserver-name localhost
 which kubectl || ( minikube kubectl get po && \
