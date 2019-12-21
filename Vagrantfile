@@ -58,7 +58,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "vagrant0"
 
-  config.vm.synced_folder "./vagrant_data", "/vagrant_data"
+  config.vm.synced_folder "./vagrant_data", "/vagrant_data"  
+  config.vm.provision "file", source: "minikube-prom-stack.yaml", destination: "minikube-prom-stack.yaml"  
   #config.vm.synced_folder "/etc/letsencrypt", "/etc/letsencrypt"
 
   config.vm.provider "virtualbox" do |vb|
