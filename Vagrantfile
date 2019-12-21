@@ -3,6 +3,10 @@
 
 $script = <<-SCRIPT
 #!/bin/bash -xe
+# variables
+k8s_version="v1.16.2"
+helm_version="v2.16.1"
+minikube_version="v1.6.2"
 
 #0
 apt-get update
@@ -10,7 +14,7 @@ apt-get update
 apt install -y docker.io socat jq mc
 #2
 which minikube || ( curl --silent -Lo minikube \
-      https://github.com/kubernetes/minikube/releases/download/v1.6.2/minikube-linux-amd64 \
+      https://github.com/kubernetes/minikube/releases/download/${minikube_version}/minikube-linux-amd64 \
        && chmod +x minikube \
         && mv minikube /usr/local/bin/ )
 #3
@@ -21,7 +25,7 @@ cat /etc/fstab | grep -q '/tmp/hostpath-provisioner' || \
         | tee -a /etc/fstab && mount -av     
 #4
 minikube update-context >/dev/null 2>&1 || true 
-minikube status >/dev/null 2>&1 || minikube start --vm-driver=none --kubernetes-version=v1.15.2 \
+minikube status >/dev/null 2>&1 || minikube start --vm-driver=none --kubernetes-version=${k8s_version} \
        --apiserver-ips $(ifconfig | grep 'inet ' | awk '{print$2}' | tr '\n' ',' | sed 's/,$//g') \
        --apiserver-name localhost
 which kubectl || ( minikube kubectl get po && \
@@ -33,16 +37,16 @@ minikube addons enable dashboard
 sleep 10
 kubectl -n kubernetes-dashboard patch svc kubernetes-dashboard -p '{"spec":{"type":"NodePort","ports": [{ "port": 80, "nodePort": 30000 }]}}'
 #6
-which helm || ( curl --silent -LO https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz \
-      && tar -xf helm-v2.16.1-linux-amd64.tar.gz  \
+which helm || ( curl --silent -LO https://get.helm.sh/helm-${helm_version}-linux-amd64.tar.gz \
+      && tar -xf helm-*-linux-amd64.tar.gz  \
        && sudo mv -f linux-amd64/helm  /usr/local/bin/ \
-        && rm -r helm-v2.16.1-linux-amd64.tar.gz linux-amd64 \
+        && rm -r helm-*-linux-amd64.tar.gz linux-amd64 \
          && sudo chmod +x /usr/local/bin/helm ) 
 helm ls || helm init || true
 while ( ! helm ls >/dev/null 2>&1 ); do sleep 10 && echo 'Waiting for tiller...';  done 
 #7
 helm repo update
-helm install stable/prometheus-operator --version=4.3.6 --name=monitoring \
+helm install stable/prometheus-operator --version=8.3.3 --name=monitoring \
         --namespace=monitoring --values=minikube-prom-stack.yaml
 #
 SCRIPT
