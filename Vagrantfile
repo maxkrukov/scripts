@@ -45,9 +45,13 @@ which helm || ( curl --silent -LO https://get.helm.sh/helm-${helm_version}-linux
 helm ls || helm init || true
 while ( ! helm ls >/dev/null 2>&1 ); do sleep 10 && echo 'Waiting for tiller...';  done 
 #7
-helm repo update
-helm install stable/prometheus-operator --version=8.3.3 --name=monitoring \
-        --namespace=monitoring --values=minikube-prom-stack.yaml
+apt install -y apache2 apache2-utils libcgi-fast-perl libapache2-mod-fcgid munin
+echp 'Listen 8000' > /etc/apache2/ports.conf
+a2enmod fcgid
+sed -i 's/Order allow,deny/Require all granted/g' /etc/munin/apache.conf 
+sed -i 's/Options None/Options FollowSymLinks SymLinksIfOwnerMatch/g' /etc/munin/apache.conf
+systemctl enable apache2 munin-node
+systemctl restart apache2 munin-node
 #
 SCRIPT
 
@@ -63,7 +67,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "vagrant0"
 
   config.vm.synced_folder "./vagrant_data", "/vagrant_data"  
-  config.vm.provision "file", source: "minikube-prom-stack.yaml", destination: "minikube-prom-stack.yaml"  
+  #config.vm.provision "file", source: "minikube-prom-stack.yaml", destination: "minikube-prom-stack.yaml"  
   #config.vm.synced_folder "/etc/letsencrypt", "/etc/letsencrypt"
 
   config.vm.provider "virtualbox" do |vb|
