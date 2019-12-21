@@ -46,12 +46,16 @@ helm ls || helm init || true
 while ( ! helm ls >/dev/null 2>&1 ); do sleep 10 && echo 'Waiting for tiller...';  done 
 #7
 apt install -y apache2 apache2-utils libcgi-fast-perl libapache2-mod-fcgid munin
-echp 'Listen 8000' > /etc/apache2/ports.conf
+echo 'Listen 8000' > /etc/apache2/ports.conf
+systemctl restart apache2
 a2enmod fcgid || true
 sed -i 's/Order allow,deny/Require all granted/g' /etc/munin/apache.conf 
 sed -i 's/Options None/Options FollowSymLinks SymLinksIfOwnerMatch/g' /etc/munin/apache.conf
+mv /etc/munin/apache.conf /etc/munin/apache24.conf
+a2enconf munin
 systemctl enable apache2 munin-node
 systemctl restart apache2 munin-node
+echo '<head><meta http-equiv="refresh" content="0; url=/munin"></head>' > /var/www/html/index.html
 #
 SCRIPT
 
