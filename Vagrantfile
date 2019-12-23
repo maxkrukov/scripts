@@ -1,5 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+#ENV['user']
+#ENV['node']
+#ENV['k8s_version']
+#ENV['helm_version']
+#ENV['minikube_version']
+
+#ENV['memory']
+#ENV['cpus']
+#ENV['bridge']
 
 $script = <<-SCRIPT
 #!/bin/bash -xe
@@ -64,7 +73,7 @@ SCRIPT
 Vagrant.configure("2") do |config|
 
   config.vm.box = "generic/ubuntu1804"
-  config.vm.hostname = user + '-' + node  || "vagrant"
+  config.vm.hostname = "#{ENV['user'] || "vagrant"}-#{ENV['node'] || "01" }"
   
   config.vm.box_check_update = false
 
@@ -79,8 +88,8 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   
     # Customize the amount of memory on the VM:
-    vb.memory = memory || "10000"
-    vb.cpus = cpus || 2
+    vb.memory = "10000"
+    vb.cpus = 2
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "90"]
   end
 
