@@ -1,14 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-#ENV['user']
-#ENV['node']
-#ENV['k8s_version']
-#ENV['helm_version']
-#ENV['minikube_version']
 
-#ENV['memory']
-#ENV['cpus']
-#ENV['bridge']
+ENV['k8s_version']
+ENV['helm_version']
+ENV['minikube_version']
 
 $script = <<-SCRIPT
 #!/bin/bash -xe
