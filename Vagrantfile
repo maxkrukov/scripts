@@ -4,9 +4,9 @@
 $script = <<-SCRIPT
 #!/bin/bash -xe
 # variables
-k8s_version="v1.16.2"
-helm_version="v2.16.1"
-minikube_version="v1.6.2"
+k8s_version="${k8s_version:-v1.16.2}"
+helm_version="${helm_version:-v2.16.1}"
+minikube_version="${minikube_version:-v1.6.2}"
 
 #0
 apt-get update
@@ -64,7 +64,7 @@ SCRIPT
 Vagrant.configure("2") do |config|
 
   config.vm.box = "generic/ubuntu1804"
-  #config.vm.hostname = "service01"
+  config.vm.hostname = user + '-' + node  || "vagrant"
   
   config.vm.box_check_update = false
 
@@ -79,8 +79,8 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   
     # Customize the amount of memory on the VM:
-    vb.memory = "10000"
-    vb.cpus = 2
+    vb.memory = memory || "10000"
+    vb.cpus = cpus || 2
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "90"]
   end
 
