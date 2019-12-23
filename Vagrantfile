@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
   
   config.vm.box_check_update = false
 
-  config.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "vagrant0"
+  config.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "#{ENV['bridge'] || 'vagrant0' }"
 
   config.vm.synced_folder "./vagrant_data", "/vagrant_data"  
   #config.vm.provision "file", source: "minikube-prom-stack.yaml", destination: "minikube-prom-stack.yaml"  
@@ -88,8 +88,8 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   
     # Customize the amount of memory on the VM:
-    vb.memory = "10000"
-    vb.cpus = 2
+    vb.memory = "#{ENV['memory'] || '10000' }"
+    vb.cpus = "#{ENV['cpus'] || '2' }"
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "90"]
   end
 
